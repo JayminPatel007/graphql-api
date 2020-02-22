@@ -1,4 +1,8 @@
 import { GraphQLServer } from 'graphql-yoga';
+import {config} from 'dotenv';
+config();   // Set up environment variables
+
+import { db } from './db';
 
 const typeDefs = `
     type Query {
@@ -21,6 +25,8 @@ const server = new GraphQLServer(
     }
 );
 
-server.start(() => {
-    console.log('The server is up');
+db.connect().then(() => {
+    server.start(() => {
+        console.log("Server is up");
+    })
 });
