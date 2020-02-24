@@ -1,0 +1,108 @@
+type Query {
+    items: [Item!]!
+    item(itemCategoryId: ID!): [Item!]!
+    login(data: loginInput): AuthData!
+    myOrders(token: String): [Order!]!
+    getMerchant(token: String): Marchent!
+}
+
+input loginInput {
+    email: String!
+    password: String!
+}
+
+type Mutation {
+    createUser(data: createUserInput): User!
+    createAdmin(data: createUserInput): User!
+    createMarchent(token: String!): Marchent!
+    createItem(token: String!, data: createItemInput): Item!
+}
+
+type AuthData {
+    userId: ID!
+    token: String!
+}
+
+input createItemInput {
+    name: String!
+    price: Float!
+    category: [ID!]!
+    imagepath: String
+    description: String
+}
+
+input createUserInput {
+    name: String!
+    email: String!
+    password: String!
+}
+
+type User {
+    _id: String!
+    name: String!
+    email: String!
+    password: String!
+    userType: usertype!
+#    orders: [Order!]!
+}
+
+enum usertype {
+    NORMAL
+    ADMIN
+    MARCHENT
+}
+
+type Marchent {
+    _id: ID!
+    user: User!
+    status: marchentStatus!
+#    items: [Item!]!
+}
+
+enum marchentStatus {
+    PENDING
+    ACCEPETED
+}
+
+type Item {
+    _id: ID!
+    name: String!
+    price: Float!
+    category: [ItemCategory!]!
+    marchent: Marchent!
+    imagepath: String
+    description: String
+}
+
+type ItemCategory {
+    _id: ID!
+    name: String!
+    items: [Item!]!
+}
+
+type Order {
+    _id: ID!
+    items: [ItemContainer!]!
+    date: String!
+    status: orderStatus
+}
+
+enum orderStatus {
+    PENDING
+    COMPLETED
+    CANCLED
+}
+
+type ItemContainer {
+    item: Item!
+    quantity: Int!
+    status: itemStatus!
+}
+
+
+enum itemStatus {
+    PENDING
+    DELIVERED
+    CANCLED
+    REJECTED
+}
